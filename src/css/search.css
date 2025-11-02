@@ -115,6 +115,7 @@ body {
   background: #6c8cff;
 }
 
+
 /* ===== loader backdrop (если используешь оверлей) ===== */
 .loader-backdrop {
   position: fixed;
@@ -124,6 +125,7 @@ body {
   place-items: center;
   z-index: 999;
 }
+.loader.hidden { display: none; }
 
 /* немного плотнее на больших экранах */
 @media (min-width: 1400px) {

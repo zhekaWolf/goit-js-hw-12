@@ -1,13 +1,16 @@
+// Рендер, модалка, лоадер, тосты, кнопка Load more
+
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
-const galleryEl = document.querySelector('#gallery');
-const loaderEl = document.querySelector('#loader');
-const loadMoreBtn = document.querySelector('#load-more');
+const gallery = document.querySelector('#gallery');
+const loader  = document.querySelector('#loader');      // элемент-лоадер
+const btnMore = document.querySelector('#load-more');   // кнопка "Load more"
 
+// Однажды создаём lightbox для ссылок внутри .gallery
 let lightbox = new SimpleLightbox('.gallery a', {
   captions: true,
   captionsData: 'alt',
@@ -16,26 +19,31 @@ let lightbox = new SimpleLightbox('.gallery a', {
 
 export function createGallery(images) {
   const markup = images.map(cardTpl).join('');
-  galleryEl.insertAdjacentHTML('beforeend', markup);
+  gallery.insertAdjacentHTML('beforeend', markup);
   lightbox.refresh();
 }
 
 export function clearGallery() {
-  galleryEl.innerHTML = '';
+  gallery.innerHTML = '';
 }
 
 export function showLoader() {
-  loaderEl.classList.remove('hidden');
+  // Добавляем класс показа и убираем hidden (на случай, если он использовался)
+  loader.classList.add('is-visible');
+  loader.hidden = false;
 }
 export function hideLoader() {
-  loaderEl.classList.add('hidden');
+  loader.classList.remove('is-visible');
+  loader.hidden = true;
 }
 
 export function showLoadMoreButton() {
-  loadMoreBtn.hidden = false;
+  btnMore.classList.add('is-visible');
+  btnMore.hidden = false;
 }
 export function hideLoadMoreButton() {
-  loadMoreBtn.hidden = true;
+  btnMore.classList.remove('is-visible');
+  btnMore.hidden = true;
 }
 
 export function showInfo(message) {
@@ -49,25 +57,17 @@ export function showError(message) {
 }
 
 export function smoothScrollAfterAppend() {
-  const first = galleryEl.firstElementChild;
+  const first = gallery.firstElementChild;
   if (!first) return;
   const { height } = first.getBoundingClientRect();
   window.scrollBy({ top: height * 2, behavior: 'smooth' });
 }
 
-function cardTpl({
-  webformatURL,
-  largeImageURL,
-  tags,
-  likes,
-  views,
-  comments,
-  downloads,
-}) {
+function cardTpl({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) {
   return `
 <li class="photo-card">
-  <a href="${largeImageURL}" class="gallery__link">
-    <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+  <a class="gallery__link" href="${largeImageURL}">
+    <img src="${webformatURL}" alt="${escapeHtml(tags)}" loading="lazy" />
   </a>
   <div class="info">
     <p><b>Likes</b> ${likes}</p>
@@ -76,4 +76,14 @@ function cardTpl({
     <p><b>Downloads</b> ${downloads}</p>
   </div>
 </li>`;
+}
+
+// маленькая защита alt от спецсимволов
+function escapeHtml(str = '') {
+  return String(str)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
 }

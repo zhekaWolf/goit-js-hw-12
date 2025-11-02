@@ -1,8 +1,12 @@
+// HTTP-запросы к Pixabay (axios + async/await)
+
 import axios from 'axios';
 
-export const PER_PAGE = 15; // по ТЗ HW-12
+// Сколько карточек на один запрос — по ТЗ 15
+export const PER_PAGE = 15;
 
-const API_KEY = '53049514-dee19204cd3e9e15730e86423'; 
+// ⚠️ ВСТАВЬ СВОЙ КЛЮЧ (оставь как строку):
+const API_KEY = '53049514-dee19204cd3e9e15730e86423';
 
 const api = axios.create({
   baseURL: 'https://pixabay.com/api/',
@@ -16,8 +20,9 @@ const api = axios.create({
 });
 
 /**
- * @param {string} query - поисковый запрос
- * @param {number} page  - номер страницы (1..n)
+ * Получить изображения по запросу и номеру страницы
+ * @param {string} query
+ * @param {number} page
  * @returns {Promise<{totalHits:number, hits:Array}>}
  */
 export async function getImagesByQuery(query, page = 1) {
