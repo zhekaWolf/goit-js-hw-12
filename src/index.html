@@ -1,23 +1,46 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="uk">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vanilla App Template</title>
-    <link rel="stylesheet" href="./css/styles.css" />
+    <title>Pixabay Search</title>
+
+    <!-- твои общие стили -->
+    <link rel="stylesheet" href="/src/css/styles.css" />
+    <!-- стили страницы поиска (если есть) -->
+    <link rel="stylesheet" href="/src/css/search.css" />
   </head>
   <body>
-    <load src="./partials/header.html" icon-path="img/sprite.svg#logo" />
-
     <main>
-      <!-- Loads the specified .html file -->
-      <load src="./partials/vite-promo.html" />
-      <load src="./partials/badges.html" />
+      <div class="container">
+        <h1 class="main-title">
+          <span class="main-title-gradient">Pixabay</span> search
+        </h1>
+
+        <!-- ВАЖНО: форма должна иметь класс form -->
+        <form id="search-form" class="form" autocomplete="off">
+          <input
+            type="text"
+            name="query"
+            placeholder="Search images..."
+            required
+          />
+          <button type="submit">Search</button>
+        </form>
+
+        <ul id="gallery" class="gallery"></ul>
+
+        <!-- Кнопка загрузки следующей страницы -->
+        <button id="load-more" class="load-more" hidden>Load more</button>
+
+        <!-- Лоадер должен быть ПОД кнопкой -->
+        <span id="loader" class="loader hidden" aria-live="polite"></span>
+      </div>
     </main>
 
-    <load src="./partials/footer.html" />
-
-    <script type="module" src="./main.js"></script>
+    <!-- Vite-модуль из этой же папки js -->
+  <script type="module" src="./main.js"></script>
   </body>
 </html>
+
+
