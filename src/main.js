@@ -1,4 +1,5 @@
-// src/js/main.js
+// main.js  (файл лежит в src/)
+
 import { getImagesByQuery, PER_PAGE } from './js/pixabay-api.js';
 import {
   createGallery,
@@ -18,27 +19,24 @@ const refs = {
   loadMore: document.querySelector('#load-more'),
 };
 
-// Глобальний стан
+// helpers to show/hide the Load More button (class-based)
+function showLoadMoreButton() {
+  refs.loadMore.classList.remove('hidden');
+}
+function hideLoadMoreButton() {
+  refs.loadMore.classList.add('hidden');
+}
+
 let query = '';
 let page = 1;
 let totalHits = 0;
 
-// Початково кнопка прихована
+// прячем Load More при загрузке страницы
 hideLoadMoreButton();
 
-// Події
 refs.form.addEventListener('submit', onSearch);
 refs.loadMore.addEventListener('click', onLoadMore);
 
-// ===== helpers to control Load More button =====
-function showLoadMoreButton() {
-  refs.loadMore.hidden = false;
-}
-function hideLoadMoreButton() {
-  refs.loadMore.hidden = true;
-}
-
-// ===== Handlers =====
 async function onSearch(e) {
   e.preventDefault();
 
@@ -48,11 +46,10 @@ async function onSearch(e) {
     return;
   }
 
-  // Скидаємо стан для нового пошуку
   page = 1;
   totalHits = 0;
   clearGallery();
-  hideLoadMoreButton(); // кнопка схована до отримання результатів
+  hideLoadMoreButton();
 
   showLoader();
   try {
@@ -64,11 +61,10 @@ async function onSearch(e) {
       return;
     }
 
-    // Малюємо першу сторінку
     createGallery(data.hits);
     showSuccess(`Hooray! We found ${totalHits} images.`);
 
-    // Якщо є ще сторінки — показуємо кнопку; інакше — повідомляємо про кінець
+    // первая страница: либо показываем Load More, либо сразу говорим что это конец
     if (page * PER_PAGE < totalHits) {
       showLoadMoreButton();
     } else {
@@ -83,15 +79,13 @@ async function onSearch(e) {
 
 async function onLoadMore() {
   page += 1;
-
-  hideLoadMoreButton(); // ховаємо на час запиту
+  hideLoadMoreButton();
   showLoader();
 
   try {
     const data = await getImagesByQuery(query, page);
     createGallery(data.hits);
 
-    // Якщо дійшли до кінця — повідомляємо; інакше повертаємо кнопку
     if (page * PER_PAGE >= totalHits) {
       showInfo("We're sorry, but you've reached the end of search results.");
     } else {

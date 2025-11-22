@@ -1,5 +1,3 @@
-// Рендер, модалка, лоадер, тосты, кнопка Load more
-
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
@@ -7,10 +5,8 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 
 const gallery = document.querySelector('#gallery');
-const loader  = document.querySelector('#loader');      // элемент-лоадер
-const btnMore = document.querySelector('#load-more');   // кнопка "Load more"
+const loader  = document.querySelector('#loader');
 
-// Однажды создаём lightbox для ссылок внутри .gallery
 let lightbox = new SimpleLightbox('.gallery a', {
   captions: true,
   captionsData: 'alt',
@@ -27,34 +23,12 @@ export function clearGallery() {
   gallery.innerHTML = '';
 }
 
-export function showLoader() {
-  // Добавляем класс показа и убираем hidden (на случай, если он использовался)
-  loader.classList.add('is-visible');
-  loader.hidden = false;
-}
-export function hideLoader() {
-  loader.classList.remove('is-visible');
-  loader.hidden = true;
-}
+export function showLoader()  { loader.classList.remove('hidden'); }
+export function hideLoader()  { loader.classList.add('hidden'); }
 
-export function showLoadMoreButton() {
-  btnMore.classList.add('is-visible');
-  btnMore.hidden = false;
-}
-export function hideLoadMoreButton() {
-  btnMore.classList.remove('is-visible');
-  btnMore.hidden = true;
-}
-
-export function showInfo(message) {
-  iziToast.info({ message, position: 'topRight' });
-}
-export function showSuccess(message) {
-  iziToast.success({ message, position: 'topRight' });
-}
-export function showError(message) {
-  iziToast.error({ message, position: 'topRight' });
-}
+export function showInfo(message)    { iziToast.info({    message, position: 'topRight' }); }
+export function showSuccess(message) { iziToast.success({ message, position: 'topRight' }); }
+export function showError(message)   { iziToast.error({   message, position: 'topRight' }); }
 
 export function smoothScrollAfterAppend() {
   const first = gallery.firstElementChild;
@@ -66,8 +40,8 @@ export function smoothScrollAfterAppend() {
 function cardTpl({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) {
   return `
 <li class="photo-card">
-  <a class="gallery__link" href="${largeImageURL}">
-    <img src="${webformatURL}" alt="${escapeHtml(tags)}" loading="lazy" />
+  <a href="${largeImageURL}" class="gallery__link">
+    <img src="${webformatURL}" alt="${tags}" loading="lazy" />
   </a>
   <div class="info">
     <p><b>Likes</b> ${likes}</p>
@@ -78,12 +52,3 @@ function cardTpl({ webformatURL, largeImageURL, tags, likes, views, comments, do
 </li>`;
 }
 
-// маленькая защита alt от спецсимволов
-function escapeHtml(str = '') {
-  return String(str)
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;')
-    .replaceAll("'", '&#39;');
-}

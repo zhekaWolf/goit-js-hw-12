@@ -132,3 +132,10 @@ body {
   .gallery__link img { height: 220px; }
 }
 
+/* ====== Helpers ====== */
+[hidden] {
+  display: none !important;
+}
+.hidden {
+  display: none !important;
+}
